@@ -50,7 +50,7 @@ $CONFIG = array (
     'mjs' => 'application/javascript',
     'js.map' => 'application/json',
   ], 
-  'maintenance_window_start' => '15', # Add this line
+  'maintenance_window_start' => '15', 
 );
 
 
