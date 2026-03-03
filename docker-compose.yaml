@@ -46,6 +46,20 @@ services:
       - redis
     networks:
       - nextcloud-net
+      
+  collabora:
+    image: collabora/code
+    container_name: collabora
+    restart: always
+    environment:
+      - domain=pi\.tail03fe67\.ts\.net
+      - username=admin
+      - password=strongpassword
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true
+    expose:
+      - 9980
+    networks:
+      - nextcloud-net
 
 volumes:
   tailscale-data-nextcloud:
