@@ -55,7 +55,7 @@ services:
       - domain=pi\.tail03fe67\.ts\.net
       - username=admin
       - password=strongpassword
-      - extra_params=--o:ssl.enable=false --o:ssl.termination=true
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true --o:num_prespawn_children=1 --o:idle_timeout_secs=60
     expose:
       - 9980
     networks:
