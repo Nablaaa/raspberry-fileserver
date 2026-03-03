@@ -10,7 +10,8 @@ This is a guid on setting up a home fileserver (like Google Drive) with the help
 
 #TODO: 
 - fill in the links
-- add image of the raspberry setup 
+- add image of the raspberry setup
+- describe how to add nextcloud office and which links to place (WOPI)
 
 
 This repo is a modified version of [nextcloud-ts git](https://github.com/avadhootabhyankar/nextcloud-ts.git). Modifications were necessary, to get the fileserver running. The main modification is to use the Raspberry Pi directly as connection point to Tailscale, instead of packing Tailscale into the docker container. This
