@@ -1,18 +1,12 @@
 # Raspberry Pi based Fileserver
 
 This is a guid on setting up a home fileserver (like Google Drive) with the help of:
-- [Nextcloud]()
-- [Tailscale]()
-- [Docker]()
-- [Raspberry Pi 4]()*
-- [Hard Drive]()
-
-
-#TODO: 
-- fill in the links
-- add image of the raspberry setup
-- describe how to add nextcloud office and which links to place (WOPI)
-- describe how to access files if nextcloud is down
+- [Nextcloud](https://nextcloud.com/de/)
+- [Tailscale](https://login.tailscale.com/)
+- [Docker](https://www.docker.com/)
+- [Raspberry Pi 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) (more than 1 GB RAM recommended)
+- [Hard Drive](amazon.de/-/en/dp/B07VC2TJK4?ref=ppx_yo2ov_dt_b_fed_asin_title) with USB 3 connection
+- [Raspberry Pi 4 Cooling](https://www.amazon.de/Miuzei-Raspberry-Aluminium-W%C3%A4rmeleitenden-kompatibel/dp/B08HCDNP23?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&smid=ADX1E4W4DEI4I&th=1)
 
 
 This repo is a modified version of [nextcloud-ts git](https://github.com/avadhootabhyankar/nextcloud-ts.git). Modifications were necessary, to get the fileserver running. The main modification is to use the Raspberry Pi directly as connection point to Tailscale, instead of packing Tailscale into the docker container. This
@@ -20,7 +14,7 @@ approach makes the setup easier. Also, there are some performance optimizations 
 
 
 ## Prerequisite
-Please install Ubuntu on your [Raspberry Pi 4]()* to get started.
+Please install Ubuntu on your [Raspberry Pi 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) to get started.
 
 ## Table of Content
 1. Mount the hard drive to the Raspberry and prepare it for the docker
@@ -268,31 +262,48 @@ Now scroll down to **Advanced settings**. There, you should insert our "subnet" 
 ```bash
 docker network inspect nextcloud-ts_nextcloud-net | grep -i subnet
 ```
-and insert the address "172.20.0.0/16" to the list and click "Save". Please make sure that this address is the same as in the [config.php file](conifg.php) for 'trusted_proxies'
-
-
-
-
-
-```bash
-```
+and insert the address "172.20.0.0/16" to the list and click "Save". Please make sure that you use this address in the [config.php file](conifg.php) for 'trusted_proxies'.
+If you have to change this address, then please restart the docker with 
 
 
 ```bash
+docker compose down
+docker compose up -d
 ```
+
+
+## Access your data straight from the hard drive
+With a private server you know exactly where your data is stored. It is stored on your hard drive and can be accessed by everyone who has access to the hard drive. So for example, if you take the hard drive and insert it into your laptop, you can find the fileserver with:
 
 
 ```bash
+lsblk
 ```
 
+on the mountpoint: <br>
+sda           8:0    1   7.4G  0 disk /media/nablaaa/XXX
+
+Then you can find the data in: 
 
 ```bash
+sudo ls /media/nablaaa/XXX/docker-volumes/nextcloud/data/<nextcloud username>/files
 ```
-
+and then you can copy the files to the Desktop and change access rights (writing access) if needed:
 
 ```bash
+sudo cp -r /media/nablaaa/XXX/docker-volumes/nextcloud/data/<nextcloud username>/files /home/nablaaa/Desktop/
+
 ```
 
 
+This is also one of the entry points for doing backups.
 
-*affiliate link - if you click on this link and purchase the product, you will directly support my work
+
+
+***
+***
+
+
+#TODO: 
+- add image of the raspberry setup
+- show how to do backups
