@@ -16,7 +16,7 @@ This is a guid on setting up a home fileserver (like Google Drive) with the help
 
 
 This repo is a modified version of [nextcloud-ts git](https://github.com/avadhootabhyankar/nextcloud-ts.git). Modifications were necessary, to get the fileserver running. The main modification is to use the Raspberry Pi directly as connection point to Tailscale, instead of packing Tailscale into the docker container. This
-approach makes the setup easier.
+approach makes the setup easier. Also, there are some performance optimizations in this repo here.
 
 
 ## Prerequisite
@@ -27,6 +27,7 @@ Please install Ubuntu on your [Raspberry Pi 4]()* to get started.
 2. Set up the tailscale network
 3. Install and set up Nextcloud via docker
 4. Sign up in Nextcloud
+
 
 ## Raspberry Pi connection
 You can either use the Raspberry Pi with a display connection and do the following steps in your Raspberry Pi console, or you can create a connection from another laptop via ssh.
@@ -43,9 +44,10 @@ ssh name@XXX.XXX.X.XXX
 ```
 
 Both ways are fine. From now an, we will continue in the console of the Raspberry Pi. <br>
-(Be aware, the IP address of the Raspi can change, if not set to static in your routers admin interface. But this will not be important for the following steps.)
 
-## Mount hard drive
+Be aware that the IP address of the Raspi can change, if not set to static in your routers admin interface. If you want to put a static IP address, you have to go to your router's admin interface and assign a fixed IP to the Raspi MAC address. The admin interface can be reached via the link that is written on the router (e.g. Telekom uses for speedport: http://speedport.ip/html/login/index.html). The device password can be found on the router as well.
+
+## Mount the hard drive
 - connect the empty hard drive via USB 3.0 to your Raspberry Pi 4
 - check for the drive (in this case, it is located at **sda**)
 ```bash
@@ -104,7 +106,73 @@ sudo mkdir -p /mnt/files/docker-volumes/db
 sudo mkdir -p /mnt/files/docker-volumes/nextcloud
 ```
 
-- now this setup is done and we want to set up the tailscale connection
+
+
+## Raspberry modifications
+If you plan to use the fileserver from several devices in parallel and perform multiple tasks on it in Nextcloud office, it is recommended to use ZRAM and SWAP memory to not run into out of memory errors. This step is optional, but helpful. But you can also do this step at a later point in time, if you run into out of memory issues.
+
+Do the following in terminal of the Raspi (e.g. via SSH connection) to enable ZRAM:
+
+```bash
+# disable SD card swap
+sudo swapoff /var/swap
+sudo dphys-swapfile swapoff
+sudo systemctl disable dphys-swapfile
+```
+
+```bash
+# add zram
+sudo apt update
+sudo apt install zram-tools
+sudo nano /etc/default/zramswap
+```
+now set the parameters:
+```bash
+ALGO=lz4
+PERCENT=50
+```
+save and leave (CTRL+X then press "y" and ENTER)
+
+```bash
+# enable zram
+sudo systemctl restart zramswap
+# check
+swapon --show
+```
+
+Now we continue with SWAP. We want to allocate 4 GB SWAP memory on the hard drive. Assume that the SSD is mounted to /mnt/files
+
+```bash
+sudo fallocate -l 4G /mnt/files/swapfile
+sudo chmod 600 /mnt/files/swapfile
+sudo mkswap /mnt/files/swapfile
+sudo swapon /mnt/files/swapfile
+# add to fstab
+echo '/mnt/files/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+# modify swappiness to 10 %
+echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+
+# check
+free -h
+```
+
+You can now also prevent system crashes by installing an app that prevents out-of-memory errors. This app closes heavy apps early enough. The app is again optional:
+
+```bash
+sudo apt install earlyoom
+sudo systemctl enable earlyoom
+```
+
+```bash
+# final check
+free -h
+swapon --show
+```
+
+
+- now the hardware is ready and we want to set up the tailscale connection
 
 ## Set up Tailscale
 - install tailscale on the raspi and on one other device, with which you want to connect to the fileserver (e.g. laptop or phone)
@@ -152,7 +220,6 @@ sudo chown -R 33:33 /mnt/files/docker-volumes/nextcloud
 - Now it is time to set up the configuration files for the docker container. For this, you can copy the files from this repository or just clone the repository to your raspberry pi
 ```bash
 git clone https://github.com/Nablaaa/raspberry-fileserver.git
-
 cd raspberry-fileserver  
 ```
 
@@ -161,7 +228,7 @@ cd raspberry-fileserver
     - db.env
     - .env
 
-You can modify the files with "nano". You can save the changes by using CTRL+X and "y" + ENTER. E.g.
+You can modify the files with "nano". You can save the changes by using (CTRL+X then press "y" and ENTER). E.g.
 ```bash
 nano config.php
 ```
@@ -184,14 +251,47 @@ sudo docker ps
 ```
 
 ## Getting started with Nextcloud
-Once your docker container is ready, you will be able to open nextcloud with the raspberry-pi address given by tailscale. You can just open the page:
+Once your docker container is ready, you will be able to open nextcloud in your browser of choice with the raspberry-pi address given by tailscale. You can just open the webpage:
 ```bash
-https://<address>
-https://pi.tailXXXXXX.ts.net
+https://pi.tailXXXXXX.ts.net # add your correct address instead of XXXXXX
 ```
 and then you will see the welcome screen of Nextcloud. Set a user name and a password and you are good to go.
 
-If you want to make modifications on the upload settings (e.g. maximum upload size or maximum execution time), you can do this in the php-overrides.ini file. The specs can be seen on this [page](https://pi.tail03fe67.ts.net/settings/admin/serverinfo).
+If you want to make modifications on the upload settings (e.g. maximum upload size or maximum execution time), you can do this in the php-overrides.ini file. The specs can be seen on this [page](https://pi.tailXXXXXX.ts.net/settings/admin/serverinfo).
+
+
+## Using Nextcloud office - Collabora
+If you want to work with excel files or documents, you can go for nextcloud office, which requires a collabora server. This server is already running, if you have used the [docker compose file](docker-compose.yaml). You then just have to connect it to your nextcloud in the settings here: https://pi.tailXXXXXX.ts.net/settings/admin/richdocuments (replace XXXXXX). Use your own server, type in the URL https://pi.tailXXXXXX.ts.net and **Disable** the certificate verification (since we do not have a certificate). <br>
+
+Now scroll down to **Advanced settings**. There, you should insert our "subnet" for WOPI requests, which you can receive from the Raspi terminal. For this, just type in the terminal:
+
+```bash
+docker network inspect nextcloud-ts_nextcloud-net | grep -i subnet
+```
+and insert the address "172.20.0.0/16" to the list and click "Save". Please make sure that this address is the same as in the [config.php file](conifg.php) for 'trusted_proxies'
+
+
+
+
+
+```bash
+```
+
+
+```bash
+```
+
+
+```bash
+```
+
+
+```bash
+```
+
+
+```bash
+```
 
 
 

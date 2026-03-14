@@ -52,9 +52,9 @@ services:
     container_name: collabora
     restart: always
     environment:
-      - domain=pi\.tail03fe67\.ts\.net
-      - username=admin
-      - password=strongpassword
+      - domain=pi\.tailXXXXXX\.ts\.net # add the correct address
+      - username=admin # modify
+      - password=strongpassword # modify
       - extra_params=--o:ssl.enable=false --o:ssl.termination=true --o:num_prespawn_children=1 --o:idle_timeout_secs=60
     expose:
       - 9980

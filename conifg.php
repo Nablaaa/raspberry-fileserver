@@ -30,7 +30,7 @@ $CONFIG = array (
   array (
          'pi.tailXXXXXX.ts.net', # replace XXXXXX with your tailscale link
   ),
-  'trusted_proxies' => ['127.0.0.1', '::1','172.20.0.0/16',],
+  'trusted_proxies' => ['127.0.0.1', '::1','172.20.0.0/16',], # the last proxy is the WOPI address
   'datadirectory' => '/var/www/html/data',
   'dbtype' => 'mysql',
   'version' => '30.0.4.1',
