@@ -92,7 +92,7 @@ sudo mount /dev/sda1 /mnt/files
 
 - if this worked, you should see "lost+found" if you type 
 ```bash
-lsblk
+ls /mnt/files
 ```
 
 - the fileserver should always be starting automatically, even if the Raspi reboots, so we want to always mount the location sda1 to files on startup
