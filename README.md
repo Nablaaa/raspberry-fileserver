@@ -25,21 +25,29 @@ Please install Ubuntu on your [Raspberry Pi 4](https://www.raspberrypi.com/produ
 
 ## Raspberry Pi connection
 You can either use the Raspberry Pi with a display connection and do the following steps in your Raspberry Pi console, or you can create a connection from another laptop via ssh.
-For the ssh connection, you need the IP of your raspberry, which you get with the command
+For the ssh connection, you need the IP of your raspberry, which you can get in several ways.
 
+- either use your laptop/computer to search in your network for the raspberry:
+```bash
+ping raspberrypi.local
+# or sometimes
+ping pi.local
+```
+- or go to your router's admin interface and search for the IP
+- or connect the Raspberry with a display, start it and open the terminal. In the terminal, type the following to receive the IP address: 
 ```bash
 hostname -I
 ```
 
-Then you can do
+To set up the SSH connection from your computer/laptop, you can open a terminal and type:
 
 ```bash
 ssh name@XXX.XXX.X.XXX
 ```
 
-Both ways are fine. From now an, we will continue in the console of the Raspberry Pi. <br>
+All is fine. From now on, we will continue in the console of the Raspberry Pi. <br>
 
-Be aware that the IP address of the Raspi can change, if not set to static in your routers admin interface. If you want to put a static IP address, you have to go to your router's admin interface and assign a fixed IP to the Raspi MAC address. The admin interface can be reached via the link that is written on the router (e.g. Telekom uses for speedport: http://speedport.ip/html/login/index.html). The device password can be found on the router as well.
+Be aware that the IP address of the Raspi can change if not set to static in your router's admin interface. If you want to put a static IP address, you have to go to your router's admin interface and assign a fixed IP to the Raspi MAC address. The admin interface can be reached via the link that is written on the router (e.g. Telekom uses for speedport: http://speedport.ip/html/login/index.html). The device password can be found on the router as well.
 
 ## Mount the hard drive
 - connect the empty hard drive via USB 3.0 to your Raspberry Pi 4
