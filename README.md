@@ -51,7 +51,7 @@ Be aware that the IP address of the Raspi can change if not set to static in you
 
 ## Mount the hard drive
 - connect the empty hard drive via USB 3.0 to your Raspberry Pi 4
-- check for the drive (in this case, it is located at **sda**)
+- check for the partition (in this case, it is located at **sda1**)
 ```bash
 lsblk
 ```
@@ -64,28 +64,30 @@ loop1         7:1    0 92.8M  1 loop /snap/core/17276
 .
 .
 loop10        7:10   0    6M  1 loop /snap/ngrok/122
-sda           8:0    1  7.4G  0 disk 
+sda           8:0    0 953.9G  0 disk 
+└─sda1        8:1    0 953.9G  0 part 
+
 
 .
 .
 .
 ```
 
-- Format the drive to ext4 
+- Format the partition to ext4 (do not format the disk)
 ```bash
-sudo mkfs.ext4 /dev/sda
+sudo mkfs.ext4 /dev/sda1
 ```
 
 - if this complains, that the drive is mounted, then unmount first:
 ```bash
-sudo umount /dev/sda
-sudo mkfs.ext4 /dev/sda
+sudo umount /dev/sda1
+sudo mkfs.ext4 /dev/sda1
 ```
 
 - now we want to always mount the drive to a defined location (files), in which we later on want to place our nextcloud installation and the database
 ```bash
 sudo mkdir -p /mnt/files
-sudo mount /dev/sda /mnt/files
+sudo mount /dev/sda1 /mnt/files
 ```
 
 - if this worked, you should see "lost+found" if you type 
@@ -93,13 +95,13 @@ sudo mount /dev/sda /mnt/files
 lsblk
 ```
 
-- the fileserver should always be starting automatically, even if the Raspi reboots, so we want to always mount the location sda to files on startup
+- the fileserver should always be starting automatically, even if the Raspi reboots, so we want to always mount the location sda1 to files on startup
 ```bash
 sudo nano /etc/fstab
 ```
 - inside the fstab document, type:
 ```bash
-/dev/sda /mnt/files ext4 defaults 0 2
+/dev/sda1 /mnt/files ext4 defaults 0 2
 ```
 
 - now we want to prepare 2 directories for a later step. We want to create a directory for the database and one for the nextcloud installation
@@ -289,7 +291,7 @@ lsblk
 ```
 
 on the mountpoint: <br>
-sda           8:0    1   7.4G  0 disk /media/nablaaa/XXX
+sda1           8:0    1   953.9G  0 disk /media/nablaaa/XXX
 
 Then you can find the data in: 
 
