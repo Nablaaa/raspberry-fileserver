@@ -26,18 +26,21 @@ services:
     restart: always
     command: redis-server --requirepass ${REDIS_PASSWORD}
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}      
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
     networks:
       - nextcloud-net
 
   app:
-    image: nextcloud:latest
+    image: nextcloud:32.0.5-apache
     restart: unless-stopped
     volumes:
       - nextcloud:/var/www/html
       - ./php-overrides.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
-      - MYSQL_HOST=db
+      - MYSQL_HOST=db      
+      - REDIS_HOST=redis
       - REDIS_HOST_PASSWORD=${REDIS_PASSWORD}
     env_file:
       - db.env
