@@ -261,7 +261,7 @@ to create a string that is sufficient. Also, all constructions with "pi.tailXXXX
 sudo docker compose up -d
 ```
 
-- check, if the docker is up with:
+- wait a bit and then check, if all docker containers are up with:
 ```bash
 sudo docker ps
 ```
