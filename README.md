@@ -277,6 +277,8 @@ Set a user name and a password and you are good to go. (Hint: the username and p
 
 If you want to make modifications on the upload settings (e.g. maximum upload size or maximum execution time), you can do this in the php-overrides.ini file. The specs can be seen on this page: https://pi.tailXXXXXX.ts.net/settings/admin/serverinfo.
 
+If you want to have the fastest fileserver connection, please consider using a LAN connection instead of WLAN. Also note, that switching to LAN will change your Raspi IP address, in case you want to set up a tunnel via SSH again.
+
 
 ## Using Nextcloud office - Collabora
 If you want to work with excel files or documents, you can go for nextcloud office, which requires a collabora server. This server is already running, if you have used the [docker compose file](docker-compose.yaml). You then just have to connect it to your nextcloud in the settings here: https://pi.tailXXXXXX.ts.net/settings/admin/richdocuments (replace XXXXXX). Use your own server, type in the URL https://pi.tailXXXXXX.ts.net and **Disable** the certificate verification (since we do not have a certificate). <br>
