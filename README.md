@@ -271,7 +271,9 @@ Once your docker container is ready, you will be able to open nextcloud in your 
 ```bash
 https://pi.tailXXXXXX.ts.net # add your correct address instead of XXXXXX
 ```
-and then you will see the welcome screen of Nextcloud. Set a user name and a password and you are good to go.
+and then you will see the welcome screen of Nextcloud. If you get a Bad Gateway warning, then just wait a bit and reload the page.
+
+Set a user name and a password and you are good to go. (Hint: the username and password should be different from the once set in the db.env / .env / config.php files).
 
 If you want to make modifications on the upload settings (e.g. maximum upload size or maximum execution time), you can do this in the php-overrides.ini file. The specs can be seen on this page: https://pi.tailXXXXXX.ts.net/settings/admin/serverinfo.
 
