@@ -33,7 +33,7 @@ services:
       - nextcloud-net
 
   app:
-    image: nextcloud:32.0.5-apache
+    image: nextcloud:latest
     restart: unless-stopped
     volumes:
       - nextcloud:/var/www/html
