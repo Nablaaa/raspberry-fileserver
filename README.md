@@ -273,7 +273,7 @@ https://pi.tailXXXXXX.ts.net # add your correct address instead of XXXXXX
 ```
 and then you will see the welcome screen of Nextcloud. Set a user name and a password and you are good to go.
 
-If you want to make modifications on the upload settings (e.g. maximum upload size or maximum execution time), you can do this in the php-overrides.ini file. The specs can be seen on this [page](https://pi.tailXXXXXX.ts.net/settings/admin/serverinfo).
+If you want to make modifications on the upload settings (e.g. maximum upload size or maximum execution time), you can do this in the php-overrides.ini file. The specs can be seen on this page: https://pi.tailXXXXXX.ts.net/settings/admin/serverinfo.
 
 
 ## Using Nextcloud office - Collabora
