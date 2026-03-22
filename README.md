@@ -103,7 +103,19 @@ sudo nano /etc/fstab
 ```bash
 /dev/sda1 /mnt/files ext4 defaults 0 2
 ```
-
+- or alternatively (recommended), use the UUID of the hard drive and mount it instead with:
+```bash
+UUID=abcd-1234 /mnt/files ext4 defaults,nofail,x-systemd.device-timeout=10 0 2
+```
+- you can get the UUID (format: 8-4-4-4-12)with:
+```bash
+blkid
+```
+- mount it and verify that it is mounted with:
+```bash
+sudo mount -a #--> expect no output
+mount | grep /mnt/files # --> should show the UUID or the mount direction /dev/sda1 
+```
 - now we want to prepare 2 directories for a later step. We want to create a directory for the database and one for the nextcloud installation
 ```bash
 sudo mkdir -p /mnt/files/docker-volumes/db
